@@ -1,0 +1,206 @@
+{
+  "repository": {
+    "name": "GastronomIQ",
+    "fullName": "CulinariaProfessionali/GastronomIQ",
+    "repositoryId": 1306313288,
+    "url": "https://github.com/CulinariaProfessionali/GastronomIQ",
+    "description": "For Culinary Recipe Development",
+    "visibility": "public",
+    "owner": {
+      "login": "CulinariaProfessionali",
+      "type": "User",
+      "id": 307008225,
+      "avatarUrl": "https://avatars.githubusercontent.com/u/307008225?v=4",
+      "profileUrl": "https://github.com/CulinariaProfessionali"
+    },
+    "defaultBranch": "main",
+    "createdAt": "2026-07-20T06:56:00Z",
+    "updatedAt": "2026-07-20T07:12:46Z",
+    "pushedAt": "2026-07-20T07:12:46Z"
+  },
+  "configuration": {
+    "archived": false,
+    "disabled": false,
+    "isTemplate": false,
+    "isFork": false,
+    "allowForking": true,
+    "allowIssues": true,
+    "allowPullRequests": true,
+    "allowWiki": true,
+    "allowDiscussions": false,
+    "hasProjects": true,
+    "hasPages": false,
+    "allowDownloads": true,
+    "mergeSettings": {
+      "allowAutoMerge": false,
+      "allowMergeCommits": true,
+      "allowRebaseMerge": true,
+      "allowSquashMerge": true,
+      "deleteOnMerge": false,
+      "allowUpdateBranch": false,
+      "requireWebCommitSignoff": false,
+      "mergePullRequestTitle": "MERGE_MESSAGE",
+      "mergePullRequestMessage": "PR_TITLE",
+      "squashMergePullRequestTitle": "COMMIT_OR_PR_TITLE",
+      "squashMergePullRequestMessage": "COMMIT_MESSAGES"
+    }
+  },
+  "statistics": {
+    "stars": 0,
+    "forks": 0,
+    "watchers": 0,
+    "openIssues": 0,
+    "networkCount": 0,
+    "size": 0,
+    "language": null
+  },
+  "permissions": {
+    "admin": true,
+    "maintain": true,
+    "pull": true,
+    "push": true,
+    "triage": true
+  },
+  "projectDetails": {
+    "purpose": "Recipe Development Tool for culinary professionals",
+    "features": [
+      "Recipe Management - Create, edit, and organize recipes with detailed instructions",
+      "Ingredient Tracking - Manage ingredient inventory and sourcing",
+      "Nutritional Analysis - Automatic nutritional information calculation",
+      "Search & Filter - Find recipes by cuisine, dietary restrictions, preparation time",
+      "Collaboration - Team comments, version history, and approval workflows",
+      "Responsive Design - Works on desktop, tablet, and mobile devices"
+    ]
+  },
+  "techStack": {
+    "runtime": "Node.js 18+",
+    "backend": "Express.js 4.x",
+    "database": "PostgreSQL 14+",
+    "language": "TypeScript",
+    "authentication": "JWT + bcrypt + OAuth2 (optional)",
+    "validation": "Zod",
+    "logging": "Winston",
+    "testing": "Jest + Supertest",
+    "containerization": "Docker + Docker Compose",
+    "orm": "Node-pg (raw queries or Prisma planned)"
+  },
+  "projectStructure": {
+    "src": {
+      "api": "API routes and controllers (recipes, ingredients, users, health checks)",
+      "services": "Business logic layer (RecipeService, IngredientService, NutritionService, AuthService)",
+      "models": "Data models and database schemas",
+      "middleware": "Express middleware (authentication, error handling, validation)",
+      "utils": "Utilities and helpers (logger, validators, formatters, constants)",
+      "config": "Configuration files (database, server)",
+      "index.ts": "Application entry point"
+    },
+    "tests": {
+      "unit": "Unit tests for services and utilities",
+      "integration": "Integration tests for API endpoints",
+      "fixtures": "Test data and mocks",
+      "setup.ts": "Test configuration"
+    },
+    "migrations": "Database schema migrations (001_initial_schema.sql)",
+    "scripts": "Utility scripts (seed database, bootstrap, lint-fix)",
+    "docs": "Documentation (ARCHITECTURE, API, DATABASE, CONTRIBUTING, DEPLOYMENT)",
+    ".github": "GitHub Actions workflows (CI/CD pipelines)"
+  },
+  "availableScripts": {
+    "dev": "Start development server",
+    "build": "Build for production",
+    "start": "Start production server",
+    "test": "Run test suite",
+    "test:watch": "Run tests in watch mode",
+    "test:coverage": "Generate coverage report",
+    "lint": "Run ESLint",
+    "lint:fix": "Fix linting issues",
+    "format": "Format code with Prettier",
+    "db:migrate": "Run database migrations",
+    "db:seed": "Seed database with sample data",
+    "type-check": "Run TypeScript type checking"
+  },
+  "environmentVariables": {
+    "server": {
+      "PORT": "3000",
+      "NODE_ENV": "development",
+      "APP_NAME": "GastronomIQ"
+    },
+    "database": {
+      "DATABASE_URL": "postgresql://user:password@localhost:5432/gastronomiq",
+      "DB_HOST": "localhost",
+      "DB_PORT": "5432",
+      "DB_NAME": "gastronomiq",
+      "DB_USER": "postgres"
+    },
+    "authentication": {
+      "JWT_SECRET": "your-super-secret-jwt-key",
+      "JWT_EXPIRATION": "7d"
+    },
+    "api": {
+      "API_BASE_URL": "http://localhost:3000/api",
+      "API_TIMEOUT": "30000",
+      "CORS_ORIGIN": "http://localhost:3000"
+    },
+    "logging": {
+      "LOG_LEVEL": "debug",
+      "LOG_FORMAT": "json"
+    }
+  },
+  "database": {
+    "type": "PostgreSQL",
+    "version": "14+",
+    "mainTables": [
+      "users - Culinary professionals and team members",
+      "recipes - Recipe metadata and content",
+      "ingredients - Ingredient definitions",
+      "recipe_ingredients - Join table for recipes and ingredients",
+      "recipe_steps - Cooking instructions",
+      "nutrition_info - Nutritional information",
+      "comments - Team collaboration",
+      "ratings - User ratings and reviews",
+      "favorites - User favorite recipes"
+    ],
+    "features": [
+      "UUID primary keys",
+      "Foreign key constraints",
+      "Soft delete support",
+      "Automatic timestamp updates",
+      "Full-text search indexes",
+      "Role-based access control"
+    ]
+  },
+  "apiEndpoints": [
+    "GET /api/health - Health check",
+    "GET /api - API info and endpoints",
+    "GET/POST /api/recipes - List and create recipes",
+    "GET/PUT/DELETE /api/recipes/:id - Recipe operations",
+    "GET /api/recipes/:id/steps - Recipe cooking steps",
+    "GET /api/recipes/:id/comments - Recipe comments",
+    "GET/POST /api/ingredients - Ingredient management",
+    "GET /api/users - User profile operations",
+    "POST /api/auth/login - User login",
+    "POST /api/auth/register - User registration"
+  ],
+  "deploymentInfo": {
+    "containerization": "Docker + Docker Compose",
+    "healthCheck": "/api/health",
+    "gracefulShutdown": "SIGTERM and SIGINT signal handling",
+    "environment": "Development, Staging, Production"
+  },
+  "cicd": {
+    "platform": "GitHub Actions",
+    "workflows": [
+      "ci.yml - Continuous Integration (test, lint, build)",
+      "deploy.yml - Continuous Deployment (build and deploy)"
+    ],
+    "supportedNodeVersions": ["18.x", "20.x"],
+    "autoTests": "Jest with coverage reporting",
+    "codeCoverage": "70% minimum threshold"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/CulinariaProfessionali/GastronomIQ/blob/main/LICENSE"
+  },
+  "exportedAt": "2026-07-20T07:15:00Z",
+  "exportVersion": "1.0"
+}
