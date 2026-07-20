@@ -1,0 +1,1926 @@
+openapi: 3.0.3
+info:
+  title: GastronomIQ API
+  description: |
+    Recipe Development Platform API for culinary professionals.
+    
+    ## Authentication
+    All endpoints (except `/auth/register` and `/auth/login`) require JWT bearer token in Authorization header.
+    
+    ```
+    Authorization: Bearer <access_token>
+    ```
+    
+    ## Multi-Tenancy
+    Organization context is extracted from JWT claims. All data is automatically scoped to the user's organization.
+    
+    ## Error Handling
+    All errors follow a standardized format with error codes and detailed messages.
+    
+  version: "1.0.0"
+  contact:
+    name: Support
+    email: support@gastronomiq.com
+  license:
+    name: MIT
+    url: https://github.com/CulinariaProfessionali/GastronomIQ/blob/main/LICENSE
+
+servers:
+  - url: https://api.gastronomiq.com/api/v1
+    description: Production
+  - url: http://localhost:3000/api/v1
+    description: Development
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token obtained from /auth/login
+
+  schemas:
+    # Auth Schemas
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - first_name
+        - last_name
+        - organization_name
+      properties:
+        email:
+          type: string
+          format: email
+          example: chef@gastronomiq.com
+        password:
+          type: string
+          format: password
+          minLength: 12
+          example: SecurePassword123!
+        first_name:
+          type: string
+          example: Jean
+        last_name:
+          type: string
+          example: Paul
+        organization_name:
+          type: string
+          example: Le Cordon Bleu Kitchen
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Login successful
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+              description: JWT access token (15 minutes)
+            refresh_token:
+              type: string
+              description: Refresh token (7 days)
+            user:
+              $ref: '#/components/schemas/User'
+            organization:
+              $ref: '#/components/schemas/Organization'
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+
+    # User Schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        email_verified:
+          type: boolean
+        two_factor_enabled:
+          type: boolean
+        roles:
+          type: array
+          items:
+            type: string
+          example: ["editor", "viewer"]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    UserResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+
+    # Organization Schemas
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        industry:
+          type: string
+          enum: [restaurant, catering, food_manufacturing, other]
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 country code
+        website:
+          type: string
+          nullable: true
+        billing_plan:
+          type: string
+          enum: [free, starter, professional, enterprise]
+        max_users:
+          type: integer
+        current_users:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    CreateOrganizationRequest:
+      type: object
+      required:
+        - name
+        - industry
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 255
+        industry:
+          type: string
+          enum: [restaurant, catering, food_manufacturing, other]
+        country:
+          type: string
+        website:
+          type: string
+          nullable: true
+
+    # Ingredient Schemas
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        unit:
+          type: string
+          example: g
+        is_allergen:
+          type: boolean
+        allergens:
+          type: array
+          items:
+            type: string
+          example: ["nuts", "dairy"]
+        cost_per_unit:
+          type: number
+          format: decimal
+          example: 2.50
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateIngredientRequest:
+      type: object
+      required:
+        - name
+        - unit
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+        category:
+          type: string
+        unit:
+          type: string
+          enum: [g, kg, ml, l, cup, tbsp, tsp, piece, oz, lb]
+        is_allergen:
+          type: boolean
+        allergens:
+          type: array
+          items:
+            type: string
+        cost_per_unit:
+          type: number
+          format: decimal
+
+    IngredientResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/Ingredient'
+
+    IngredientListResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Recipe Schemas
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, expert]
+        cuisine:
+          type: string
+          nullable: true
+        yield_amount:
+          type: number
+          format: decimal
+          example: 4
+        yield_unit:
+          type: string
+          example: servings
+        prep_time_minutes:
+          type: integer
+          nullable: true
+        cook_time_minutes:
+          type: integer
+          nullable: true
+        rest_time_minutes:
+          type: integer
+          nullable: true
+        total_time_minutes:
+          type: integer
+        status:
+          type: string
+          enum: [draft, review, approved, published, archived]
+        dietary_restrictions:
+          type: array
+          items:
+            type: string
+          example: [vegan, gluten-free]
+        equipment:
+          type: array
+          items:
+            type: string
+          example: [oven, mixer]
+        version_number:
+          type: integer
+        is_published:
+          type: boolean
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        view_count:
+          type: integer
+        like_count:
+          type: integer
+        created_by:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RecipeDetail:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+        - type: object
+          properties:
+            steps:
+              type: array
+              items:
+                $ref: '#/components/schemas/RecipeStep'
+            ingredients:
+              type: array
+              items:
+                $ref: '#/components/schemas/RecipeIngredient'
+            nutrition:
+              $ref: '#/components/schemas/NutritionInfo'
+            cost_info:
+              $ref: '#/components/schemas/RecipeCost'
+
+    CreateRecipeRequest:
+      type: object
+      required:
+        - name
+        - difficulty
+        - yield_amount
+        - yield_unit
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 255
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, expert]
+        cuisine:
+          type: string
+        yield_amount:
+          type: number
+          format: decimal
+        yield_unit:
+          type: string
+        prep_time_minutes:
+          type: integer
+        cook_time_minutes:
+          type: integer
+        rest_time_minutes:
+          type: integer
+        dietary_restrictions:
+          type: array
+          items:
+            type: string
+        equipment:
+          type: array
+          items:
+            type: string
+
+    UpdateRecipeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+        cuisine:
+          type: string
+        yield_amount:
+          type: number
+        yield_unit:
+          type: string
+        prep_time_minutes:
+          type: integer
+        cook_time_minutes:
+          type: integer
+        rest_time_minutes:
+          type: integer
+        dietary_restrictions:
+          type: array
+          items:
+            type: string
+        equipment:
+          type: array
+          items:
+            type: string
+
+    RecipeStep:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        step_number:
+          type: integer
+        title:
+          type: string
+          nullable: true
+        instructions:
+          type: string
+        duration_minutes:
+          type: integer
+          nullable: true
+        temperature_celsius:
+          type: number
+          nullable: true
+        equipment_needed:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+          nullable: true
+
+    CreateRecipeStepRequest:
+      type: object
+      required:
+        - step_number
+        - instructions
+      properties:
+        step_number:
+          type: integer
+        title:
+          type: string
+        instructions:
+          type: string
+        duration_minutes:
+          type: integer
+        temperature_celsius:
+          type: number
+        equipment_needed:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+
+    RecipeIngredient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ingredient:
+          $ref: '#/components/schemas/Ingredient'
+        quantity:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        is_optional:
+          type: boolean
+        substitutes:
+          type: array
+          items:
+            type: object
+
+    AddRecipeIngredientRequest:
+      type: object
+      required:
+        - ingredient_id
+        - quantity
+        - unit
+      properties:
+        ingredient_id:
+          type: string
+          format: uuid
+        quantity:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        notes:
+          type: string
+        is_optional:
+          type: boolean
+
+    NutritionInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        per_serving:
+          type: boolean
+        calories:
+          type: number
+          format: decimal
+        protein_g:
+          type: number
+          format: decimal
+        carbohydrates_g:
+          type: number
+          format: decimal
+        fat_g:
+          type: number
+          format: decimal
+        saturated_fat_g:
+          type: number
+          format: decimal
+        fiber_g:
+          type: number
+          format: decimal
+        sugar_g:
+          type: number
+          format: decimal
+        sodium_mg:
+          type: number
+          format: decimal
+        calculated_at:
+          type: string
+          format: date-time
+
+    RecipeCost:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        total_cost:
+          type: number
+          format: decimal
+        cost_per_serving:
+          type: number
+          format: decimal
+        currency:
+          type: string
+          example: USD
+        calculated_at:
+          type: string
+          format: date-time
+
+    RecipeResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/RecipeDetail'
+
+    RecipeListResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipe'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Inventory Schemas
+    InventoryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ingredient:
+          $ref: '#/components/schemas/Ingredient'
+        quantity_on_hand:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        reorder_point:
+          type: number
+          format: decimal
+          nullable: true
+        reorder_quantity:
+          type: number
+          format: decimal
+          nullable: true
+        unit_cost:
+          type: number
+          format: decimal
+        storage_location:
+          type: string
+          nullable: true
+        expiration_date:
+          type: string
+          format: date
+          nullable: true
+        batch_number:
+          type: string
+          nullable: true
+        last_restocked_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+
+    UpdateInventoryRequest:
+      type: object
+      properties:
+        quantity:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        reorder_point:
+          type: number
+          format: decimal
+        reorder_quantity:
+          type: number
+          format: decimal
+        unit_cost:
+          type: number
+          format: decimal
+        storage_location:
+          type: string
+        expiration_date:
+          type: string
+          format: date
+
+    AddStockRequest:
+      type: object
+      required:
+        - quantity
+        - unit
+      properties:
+        quantity:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        reason:
+          type: string
+          example: "Received delivery order #123"
+        supplier_code:
+          type: string
+        batch_number:
+          type: string
+        expiration_date:
+          type: string
+          format: date
+
+    ConsumeStockRequest:
+      type: object
+      required:
+        - quantity
+        - unit
+      properties:
+        quantity:
+          type: number
+          format: decimal
+        unit:
+          type: string
+        reason:
+          type: string
+          example: "Used in recipe Pasta Carbonara"
+        reference_type:
+          type: string
+          enum: [recipe, adjustment, waste, return]
+        reference_id:
+          type: string
+          format: uuid
+
+    InventoryResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/InventoryItem'
+
+    InventoryListResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/InventoryItem'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # Report Schemas
+    CostReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        total_recipes:
+          type: integer
+        average_cost_per_recipe:
+          type: number
+          format: decimal
+        highest_cost_recipe:
+          type: object
+          properties:
+            recipe_id:
+              type: string
+              format: uuid
+            recipe_name:
+              type: string
+            cost:
+              type: number
+              format: decimal
+        lowest_cost_recipe:
+          type: object
+          properties:
+            recipe_id:
+              type: string
+              format: uuid
+            recipe_name:
+              type: string
+            cost:
+              type: number
+              format: decimal
+        cost_trend:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              average_cost:
+                type: number
+                format: decimal
+        generated_at:
+          type: string
+          format: date-time
+
+    # Common Schemas
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 20
+        totalCount:
+          type: integer
+          example: 145
+        totalPages:
+          type: integer
+          example: 8
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        errorCode:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+              code:
+                type: string
+        traceId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    SuccessResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+tags:
+  - name: Authentication
+    description: User registration, login, and token management
+  - name: Organizations
+    description: Organization management and team operations
+  - name: Ingredients
+    description: Ingredient master data management
+  - name: Recipes
+    description: Recipe creation, editing, and publishing
+  - name: Inventory
+    description: Stock tracking and inventory management
+  - name: Reporting
+    description: Analytics and reporting
+
+paths:
+  # Authentication Endpoints
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user and organization
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        409:
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login and obtain tokens
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        200:
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        401:
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout and revoke tokens
+      operationId: logoutUser
+      security:
+        - BearerAuth: []
+      responses:
+        204:
+          description: Logout successful
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/enable-2fa:
+    post:
+      tags:
+        - Authentication
+      summary: Enable two-factor authentication
+      operationId: enableTwoFA
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: 2FA enabled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      secret:
+                        type: string
+                        description: Base32 encoded secret for QR code
+                      qr_code_url:
+                        type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # Organization Endpoints
+  /organizations:
+    post:
+      tags:
+        - Organizations
+      summary: Create organization
+      operationId: createOrganization
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        201:
+          description: Organization created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Organization'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /organizations/{organizationId}:
+    get:
+      tags:
+        - Organizations
+      summary: Get organization details
+      operationId: getOrganization
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Organization'
+        404:
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Organizations
+      summary: Update organization
+      operationId: updateOrganization
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        200:
+          description: Organization updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Organization'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /organizations/{organizationId}/members:
+    get:
+      tags:
+        - Organizations
+      summary: List team members
+      operationId: listTeamMembers
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        200:
+          description: Team members list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /organizations/{organizationId}/members/{userId}/invite:
+    post:
+      tags:
+        - Organizations
+      summary: Invite user to organization
+      operationId: inviteUserToOrganization
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum: [viewer, editor, admin]
+      responses:
+        201:
+          description: Invitation sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        403:
+          description: Permission denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # Ingredient Endpoints
+  /ingredients:
+    get:
+      tags:
+        - Ingredients
+      summary: List ingredients
+      operationId: listIngredients
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search by name
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: is_allergen
+          in: query
+          schema:
+            type: boolean
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        200:
+          description: Ingredients list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientListResponse'
+
+    post:
+      tags:
+        - Ingredients
+      summary: Create ingredient
+      operationId: createIngredient
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIngredientRequest'
+      responses:
+        201:
+          description: Ingredient created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientResponse'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ingredients/{ingredientId}:
+    get:
+      tags:
+        - Ingredients
+      summary: Get ingredient details
+      operationId: getIngredient
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Ingredient details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientResponse'
+        404:
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Ingredients
+      summary: Update ingredient
+      operationId: updateIngredient
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIngredientRequest'
+      responses:
+        200:
+          description: Ingredient updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientResponse'
+        404:
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Ingredients
+      summary: Delete ingredient
+      operationId: deleteIngredient
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Ingredient deleted
+        404:
+          description: Ingredient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # Recipe Endpoints
+  /recipes:
+    get:
+      tags:
+        - Recipes
+      summary: List recipes
+      operationId: listRecipes
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, review, approved, published, archived]
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [easy, medium, hard, expert]
+        - name: cuisine
+          in: query
+          schema:
+            type: string
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        200:
+          description: Recipes list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeListResponse'
+
+    post:
+      tags:
+        - Recipes
+      summary: Create recipe
+      operationId: createRecipe
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeRequest'
+      responses:
+        201:
+          description: Recipe created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        400:
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /recipes/{recipeId}:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipe details
+      operationId: getRecipe
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Recipe details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        404:
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Recipes
+      summary: Update recipe
+      operationId: updateRecipe
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecipeRequest'
+      responses:
+        200:
+          description: Recipe updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        404:
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Recipes
+      summary: Delete recipe
+      operationId: deleteRecipe
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Recipe deleted
+        404:
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /recipes/{recipeId}/steps:
+    post:
+      tags:
+        - Recipes
+      summary: Add recipe step
+      operationId: addRecipeStep
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeStepRequest'
+      responses:
+        201:
+          description: Step added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/RecipeStep'
+
+  /recipes/{recipeId}/ingredients:
+    post:
+      tags:
+        - Recipes
+      summary: Add ingredient to recipe
+      operationId: addRecipeIngredient
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddRecipeIngredientRequest'
+      responses:
+        201:
+          description: Ingredient added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/RecipeIngredient'
+
+  /recipes/{recipeId}/publish:
+    post:
+      tags:
+        - Recipes
+      summary: Publish recipe
+      operationId: publishRecipe
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Recipe published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        400:
+          description: Cannot publish recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /recipes/{recipeId}/cost:
+    get:
+      tags:
+        - Recipes
+      summary: Calculate recipe cost
+      operationId: getRecipeCost
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Cost information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/RecipeCost'
+
+  /recipes/{recipeId}/cost-history:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipe cost history
+      operationId: getRecipeCostHistory
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: days
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        200:
+          description: Cost history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RecipeCost'
+
+  # Inventory Endpoints
+  /inventory:
+    get:
+      tags:
+        - Inventory
+      summary: List inventory items
+      operationId: listInventory
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: low_stock_only
+          in: query
+          schema:
+            type: boolean
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        200:
+          description: Inventory list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryListResponse'
+
+  /inventory/{ingredientId}:
+    get:
+      tags:
+        - Inventory
+      summary: Get inventory item
+      operationId: getInventoryItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Inventory item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+
+    put:
+      tags:
+        - Inventory
+      summary: Update inventory item
+      operationId: updateInventoryItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInventoryRequest'
+      responses:
+        200:
+          description: Inventory item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+
+  /inventory/{ingredientId}/add-stock:
+    post:
+      tags:
+        - Inventory
+      summary: Add stock
+      operationId: addStock
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddStockRequest'
+      responses:
+        200:
+          description: Stock added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+
+  /inventory/{ingredientId}/consume:
+    post:
+      tags:
+        - Inventory
+      summary: Consume stock
+      operationId: consumeStock
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsumeStockRequest'
+      responses:
+        200:
+          description: Stock consumed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryResponse'
+
+  /inventory/low-stock:
+    get:
+      tags:
+        - Inventory
+      summary: Get low stock items
+      operationId: getLowStockItems
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Low stock items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryListResponse'
+
+  # Reporting Endpoints
+  /reports/cost-analysis:
+    post:
+      tags:
+        - Reporting
+      summary: Generate cost analysis report
+      operationId: generateCostReport
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start_date
+                - end_date
+              properties:
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+      responses:
+        200:
+          description: Cost report generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CostReport'
+
+security:
+  - BearerAuth: []
