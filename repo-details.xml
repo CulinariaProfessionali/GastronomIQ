@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository>
+  <metadata>
+    <exportedAt>2026-07-20T07:15:00Z</exportedAt>
+    <exportVersion>1.0</exportVersion>
+    <format>XML</format>
+  </metadata>
+  
+  <repositoryInfo>
+    <name>GastronomIQ</name>
+    <fullName>CulinariaProfessionali/GastronomIQ</fullName>
+    <repositoryId>1306313288</repositoryId>
+    <url>https://github.com/CulinariaProfessionali/GastronomIQ</url>
+    <description>For Culinary Recipe Development</description>
+    <visibility>Public</visibility>
+    <defaultBranch>main</defaultBranch>
+    <createdAt>2026-07-20T06:56:00Z</createdAt>
+    <updatedAt>2026-07-20T07:12:46Z</updatedAt>
+    <pushedAt>2026-07-20T07:12:46Z</pushedAt>
+  </repositoryInfo>
+  
+  <owner>
+    <login>CulinariaProfessionali</login>
+    <type>User</type>
+    <id>307008225</id>
+    <avatarUrl>https://avatars.githubusercontent.com/u/307008225?v=4</avatarUrl>
+    <profileUrl>https://github.com/CulinariaProfessionali</profileUrl>
+  </owner>
+  
+  <configuration>
+    <archived>false</archived>
+    <disabled>false</disabled>
+    <isTemplate>false</isTemplate>
+    <isFork>false</isFork>
+    <allowForking>true</allowForking>
+    <allowIssues>true</allowIssues>
+    <allowPullRequests>true</allowPullRequests>
+    <allowWiki>true</allowWiki>
+    <allowDiscussions>false</allowDiscussions>
+    <hasProjects>true</hasProjects>
+    <hasPages>false</hasPages>
+    <allowDownloads>true</allowDownloads>
+  </configuration>
+  
+  <mergeSettings>
+    <allowAutoMerge>false</allowAutoMerge>
+    <allowMergeCommits>true</allowMergeCommits>
+    <allowRebaseMerge>true</allowRebaseMerge>
+    <allowSquashMerge>true</allowSquashMerge>
+    <deleteOnMerge>false</deleteOnMerge>
+    <allowUpdateBranch>false</allowUpdateBranch>
+    <requireWebCommitSignoff>false</requireWebCommitSignoff>
+  </mergeSettings>
+  
+  <statistics>
+    <stars>0</stars>
+    <forks>0</forks>
+    <watchers>0</watchers>
+    <openIssues>0</openIssues>
+    <networkCount>0</networkCount>
+    <size>0</size>
+    <language nil="true"/>
+  </statistics>
+  
+  <permissions>
+    <admin>true</admin>
+    <maintain>true</maintain>
+    <pull>true</pull>
+    <push>true</push>
+    <triage>true</triage>
+  </permissions>
+  
+  <projectDetails>
+    <purpose>Recipe Development Tool for culinary professionals</purpose>
+    <features>
+      <feature>Recipe Management - Create, edit, and organize recipes with detailed instructions</feature>
+      <feature>Ingredient Tracking - Manage ingredient inventory and sourcing</feature>
+      <feature>Nutritional Analysis - Automatic nutritional information calculation</feature>
+      <feature>Search &amp; Filter - Find recipes by cuisine, dietary restrictions, preparation time</feature>
+      <feature>Collaboration - Team comments, version history, and approval workflows</feature>
+      <feature>Responsive Design - Works on desktop, tablet, and mobile devices</feature>
+    </features>
+  </projectDetails>
+  
+  <techStack>
+    <runtime>Node.js 18+</runtime>
+    <backend>Express.js 4.x</backend>
+    <database>PostgreSQL 14+</database>
+    <language>TypeScript</language>
+    <authentication>JWT + bcrypt + OAuth2 (optional)</authentication>
+    <validation>Zod</validation>
+    <logging>Winston</logging>
+    <testing>Jest + Supertest</testing>
+    <containerization>Docker + Docker Compose</containerization>
+    <orm>Node-pg (raw queries or Prisma planned)</orm>
+  </techStack>
+  
+  <projectStructure>
+    <directory name="src">
+      <subdirectory name="api" description="API routes and controllers"/>
+      <subdirectory name="services" description="Business logic layer"/>
+      <subdirectory name="models" description="Data models and database schemas"/>
+      <subdirectory name="middleware" description="Express middleware"/>
+      <subdirectory name="utils" description="Utilities and helpers"/>
+      <subdirectory name="config" description="Configuration files"/>
+      <file name="index.ts" description="Application entry point"/>
+    </directory>
+    <directory name="tests">
+      <subdirectory name="unit" description="Unit tests"/>
+      <subdirectory name="integration" description="Integration tests"/>
+      <subdirectory name="fixtures" description="Test data and mocks"/>
+    </directory>
+    <directory name="migrations" description="Database schema migrations"/>
+    <directory name="scripts" description="Utility scripts"/>
+    <directory name="docs" description="Documentation"/>
+    <directory name=".github" description="GitHub Actions workflows"/>
+  </projectStructure>
+  
+  <availableScripts>
+    <script name="dev" description="Start development server"/>
+    <script name="build" description="Build for production"/>
+    <script name="start" description="Start production server"/>
+    <script name="test" description="Run test suite"/>
+    <script name="test:watch" description="Run tests in watch mode"/>
+    <script name="test:coverage" description="Generate coverage report"/>
+    <script name="lint" description="Run ESLint"/>
+    <script name="lint:fix" description="Fix linting issues"/>
+    <script name="format" description="Format code with Prettier"/>
+    <script name="db:migrate" description="Run database migrations"/>
+    <script name="db:seed" description="Seed database with sample data"/>
+    <script name="type-check" description="Run TypeScript type checking"/>
+  </availableScripts>
+  
+  <environmentVariables>
+    <category name="Server">
+      <variable name="PORT" value="3000"/>
+      <variable name="NODE_ENV" value="development"/>
+      <variable name="APP_NAME" value="GastronomIQ"/>
+    </category>
+    <category name="Database">
+      <variable name="DATABASE_URL" value="postgresql://user:password@localhost:5432/gastronomiq"/>
+      <variable name="DB_HOST" value="localhost"/>
+      <variable name="DB_PORT" value="5432"/>
+      <variable name="DB_NAME" value="gastronomiq"/>
+      <variable name="DB_USER" value="postgres"/>
+    </category>
+    <category name="Authentication">
+      <variable name="JWT_SECRET" value="your-super-secret-jwt-key"/>
+      <variable name="JWT_EXPIRATION" value="7d"/>
+    </category>
+    <category name="API">
+      <variable name="API_BASE_URL" value="http://localhost:3000/api"/>
+      <variable name="API_TIMEOUT" value="30000"/>
+      <variable name="CORS_ORIGIN" value="http://localhost:3000"/>
+    </category>
+    <category name="Logging">
+      <variable name="LOG_LEVEL" value="debug"/>
+      <variable name="LOG_FORMAT" value="json"/>
+    </category>
+  </environmentVariables>
+  
+  <database>
+    <type>PostgreSQL</type>
+    <version>14+</version>
+    <tables>
+      <table name="users" description="Culinary professionals and team members"/>
+      <table name="recipes" description="Recipe metadata and content"/>
+      <table name="ingredients" description="Ingredient definitions"/>
+      <table name="recipe_ingredients" description="Join table for recipes and ingredients"/>
+      <table name="recipe_steps" description="Cooking instructions"/>
+      <table name="nutrition_info" description="Nutritional information"/>
+      <table name="comments" description="Team collaboration"/>
+      <table name="ratings" description="User ratings and reviews"/>
+      <table name="favorites" description="User favorite recipes"/>
+    </tables>
+    <features>
+      <feature>UUID primary keys</feature>
+      <feature>Foreign key constraints</feature>
+      <feature>Soft delete support</feature>
+      <feature>Automatic timestamp updates</feature>
+      <feature>Full-text search indexes</feature>
+      <feature>Role-based access control</feature>
+    </features>
+  </database>
+  
+  <apiEndpoints>
+    <endpoint method="GET" path="/api/health" description="Health check"/>
+    <endpoint method="GET" path="/api" description="API info and endpoints"/>
+    <endpoint method="GET" path="/api/recipes" description="List recipes"/>
+    <endpoint method="POST" path="/api/recipes" description="Create recipe"/>
+    <endpoint method="GET" path="/api/recipes/:id" description="Get recipe details"/>
+    <endpoint method="PUT" path="/api/recipes/:id" description="Update recipe"/>
+    <endpoint method="DELETE" path="/api/recipes/:id" description="Delete recipe"/>
+    <endpoint method="GET" path="/api/recipes/:id/steps" description="Get recipe steps"/>
+    <endpoint method="GET" path="/api/recipes/:id/comments" description="Get recipe comments"/>
+    <endpoint method="GET" path="/api/ingredients" description="List ingredients"/>
+    <endpoint method="POST" path="/api/ingredients" description="Create ingredient"/>
+    <endpoint method="GET" path="/api/users" description="User operations"/>
+    <endpoint method="POST" path="/api/auth/login" description="User login"/>
+    <endpoint method="POST" path="/api/auth/register" description="User registration"/>
+  </apiEndpoints>
+  
+  <deployment>
+    <containerization>Docker + Docker Compose</containerization>
+    <healthCheckEndpoint>/api/health</healthCheckEndpoint>
+    <gracefulShutdown>SIGTERM and SIGINT signal handling</gracefulShutdown>
+    <environments>
+      <environment>Development</environment>
+      <environment>Staging</environment>
+      <environment>Production</environment>
+    </environments>
+  </deployment>
+  
+  <cicd>
+    <platform>GitHub Actions</platform>
+    <workflows>
+      <workflow name="ci.yml" description="Continuous Integration"/>
+      <workflow name="deploy.yml" description="Continuous Deployment"/>
+    </workflows>
+    <supportedNodeVersions>
+      <version>18.x</version>
+      <version>20.x</version>
+    </supportedNodeVersions>
+    <testing>Jest with coverage reporting</testing>
+    <codeCoverageThreshold>70%</codeCoverageThreshold>
+  </cicd>
+  
+  <license>
+    <type>MIT</type>
+    <url>https://github.com/CulinariaProfessionali/GastronomIQ/blob/main/LICENSE</url>
+  </license>
+</repository>
