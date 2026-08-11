@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../GastronomIQ.Application/GastronomIQ.Application.csproj" />
-    <ProjectReference Include="../GastronomIQ.Domain/GastronomIQ.Domain.csproj" />
-    <ProjectReference Include="../GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj" />
+    <ProjectReference Include="GastronomIQ.Application/GastronomIQ.Application.csproj" />
+    <ProjectReference Include="GastronomIQ.Domain/GastronomIQ.Domain.csproj" />
+    <ProjectReference Include="GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
