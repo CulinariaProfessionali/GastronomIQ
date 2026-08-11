@@ -15,29 +15,52 @@ public sealed record StockLocationId(Guid Value);
 public sealed record InventoryItemId(Guid Value);
 public sealed record InventoryMovementId(Guid Value);
 
-public sealed record InventoryMovement(
-    InventoryMovementId Id,
-    Guid OrganizationId,
-    Guid BranchId,
-    Guid StockLocationId,
-    Guid IngredientId,
-    InventoryMovementType Type,
-    decimal Quantity,
-    decimal UnitCost,
-    string Currency,
-    Guid? ReferenceId,
-    DateTimeOffset OccurredAt)
+public sealed record InventoryMovement
 {
-    public InventoryMovement
-        : this(Id, OrganizationId, BranchId, StockLocationId, IngredientId,
-            Type, Quantity, UnitCost, Currency, ReferenceId, OccurredAt)
+    public InventoryMovementId Id { get; init; }
+    public Guid OrganizationId { get; init; }
+    public Guid BranchId { get; init; }
+    public Guid StockLocationId { get; init; }
+    public Guid IngredientId { get; init; }
+    public InventoryMovementType Type { get; init; }
+    public decimal Quantity { get; init; }
+    public decimal UnitCost { get; init; }
+    public string Currency { get; init; }
+    public Guid? ReferenceId { get; init; }
+    public DateTimeOffset OccurredAt { get; init; }
+
+    public InventoryMovement(
+        InventoryMovementId id,
+        Guid organizationId,
+        Guid branchId,
+        Guid stockLocationId,
+        Guid ingredientId,
+        InventoryMovementType type,
+        decimal quantity,
+        decimal unitCost,
+        string currency,
+        Guid? referenceId,
+        DateTimeOffset occurredAt)
     {
-        if (OrganizationId == Guid.Empty) throw new ArgumentException("Organization is required.");
-        if (BranchId == Guid.Empty) throw new ArgumentException("Branch is required.");
-        if (StockLocationId == Guid.Empty) throw new ArgumentException("Stock location is required.");
-        if (IngredientId == Guid.Empty) throw new ArgumentException("Ingredient is required.");
-        if (Quantity <= 0) throw new ArgumentOutOfRangeException(nameof(Quantity));
-        if (UnitCost < 0) throw new ArgumentOutOfRangeException(nameof(UnitCost));
+        if (organizationId == Guid.Empty) throw new ArgumentException("Organization is required.");
+        if (branchId == Guid.Empty) throw new ArgumentException("Branch is required.");
+        if (stockLocationId == Guid.Empty) throw new ArgumentException("Stock location is required.");
+        if (ingredientId == Guid.Empty) throw new ArgumentException("Ingredient is required.");
+        if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity));
+        if (unitCost < 0) throw new ArgumentOutOfRangeException(nameof(unitCost));
+        if (string.IsNullOrWhiteSpace(currency)) throw new ArgumentException("Currency is required.");
+
+        Id = id;
+        OrganizationId = organizationId;
+        BranchId = branchId;
+        StockLocationId = stockLocationId;
+        IngredientId = ingredientId;
+        Type = type;
+        Quantity = quantity;
+        UnitCost = unitCost;
+        Currency = currency.Trim().ToUpperInvariant();
+        ReferenceId = referenceId;
+        OccurredAt = occurredAt;
     }
 
     public decimal SignedQuantity =>
