@@ -38,7 +38,7 @@ public sealed class InMemoryInventoryService : IInventoryService
             new InventoryMovementId(Guid.NewGuid()),
             request.OrganizationId,
             request.BranchId,
-            request.StockLocationId,
+            new StockLocationId(request.StockLocationId),
             request.IngredientId,
             type,
             request.Quantity,

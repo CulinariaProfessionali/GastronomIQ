@@ -20,7 +20,7 @@ public sealed record InventoryMovement
     public InventoryMovementId Id { get; init; }
     public Guid OrganizationId { get; init; }
     public Guid BranchId { get; init; }
-    public Guid StockLocationId { get; init; }
+    public StockLocationId StockLocationId { get; init; }
     public Guid IngredientId { get; init; }
     public InventoryMovementType Type { get; init; }
     public decimal Quantity { get; init; }
@@ -33,7 +33,7 @@ public sealed record InventoryMovement
         InventoryMovementId id,
         Guid organizationId,
         Guid branchId,
-        Guid stockLocationId,
+        StockLocationId stockLocationId,
         Guid ingredientId,
         InventoryMovementType type,
         decimal quantity,
@@ -44,7 +44,7 @@ public sealed record InventoryMovement
     {
         if (organizationId == Guid.Empty) throw new ArgumentException("Organization is required.");
         if (branchId == Guid.Empty) throw new ArgumentException("Branch is required.");
-        if (stockLocationId == Guid.Empty) throw new ArgumentException("Stock location is required.");
+        if (stockLocationId.Value == Guid.Empty) throw new ArgumentException("Stock location is required.");
         if (ingredientId == Guid.Empty) throw new ArgumentException("Ingredient is required.");
         if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity));
         if (unitCost < 0) throw new ArgumentOutOfRangeException(nameof(unitCost));

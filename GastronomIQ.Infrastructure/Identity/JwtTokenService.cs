@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using GastronomIQ.Application.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 
 namespace GastronomIQ.Infrastructure.Identity;
 
