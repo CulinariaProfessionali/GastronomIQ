@@ -5,8 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <ProjectReference Include="GastronomIQ.Application/GastronomIQ.Application.csproj" />
     <ProjectReference Include="GastronomIQ.Domain/GastronomIQ.Domain.csproj" />
     <ProjectReference Include="GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="GastronomIQ.Application/**/*.cs" />
+    <Compile Remove="GastronomIQ.Application.Tests/**/*.cs" />
+    <Compile Remove="GastronomIQ.Domain/**/*.cs" />
+    <Compile Remove="GastronomIQ.Domain.Tests/**/*.cs" />
+    <Compile Remove="GastronomIQ.Infrastructure/**/*.cs" />
+    <Compile Remove="GastronomIQ.Integration.Tests/**/*.cs" />
   </ItemGroup>
 </Project>
