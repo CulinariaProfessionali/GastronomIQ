@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GastronomIQ.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c1de85bfadb4e7dddcabd5b20c0dc0b19fbd459")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5440996c7a1ad8955e0eecccbde40f87e940c45e")]
 [assembly: System.Reflection.AssemblyProductAttribute("GastronomIQ.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GastronomIQ.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
