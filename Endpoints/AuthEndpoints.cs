@@ -17,8 +17,8 @@ public static class AuthEndpoints
 
             return result.Status switch
             {
-                RegistrationStatus.Success when result.Tokens is not null =>
-                    Results.Created("/api/v1/auth/register", result.Tokens),
+                RegistrationStatus.Success when result.Tokens is not null && result.UserId.HasValue =>
+                    Results.Created($"/api/v1/users/{result.UserId}", result.Tokens),
                 RegistrationStatus.InvalidRequest =>
                     Results.BadRequest(new { error = "Invalid registration payload." }),
                 RegistrationStatus.EmailAlreadyExists =>

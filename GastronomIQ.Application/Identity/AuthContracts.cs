@@ -21,7 +21,8 @@ public enum RegistrationStatus
 
 public sealed record RegistrationResult(
     RegistrationStatus Status,
-    TokenResponse? Tokens);
+    TokenResponse? Tokens,
+    Guid? UserId = null);
 
 public interface IAuthenticationService
 {

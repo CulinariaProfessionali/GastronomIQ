@@ -60,6 +60,54 @@ public class AuthenticationServiceTests
         Assert.Null(login);
     }
 
+    [Fact]
+    public async Task Register_rejects_overly_long_password()
+    {
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
+        var request = new RegisterRequest(
+            "chef@gastronomiq.com",
+            new string('a', 1025),
+            "Chef User",
+            "Kitchen Team");
+
+        var registration = await service.RegisterAsync(request, CancellationToken.None);
+
+        Assert.Equal(RegistrationStatus.InvalidRequest, registration.Status);
+        Assert.Null(registration.Tokens);
+    }
+
+    [Fact]
+    public async Task Register_rejects_empty_email()
+    {
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
+        var request = new RegisterRequest(
+            "",
+            "StrongPassword123!",
+            "Chef User",
+            "Kitchen Team");
+
+        var registration = await service.RegisterAsync(request, CancellationToken.None);
+
+        Assert.Equal(RegistrationStatus.InvalidRequest, registration.Status);
+        Assert.Null(registration.Tokens);
+    }
+
+    [Fact]
+    public async Task Register_rejects_overly_long_organization_name()
+    {
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
+        var request = new RegisterRequest(
+            "chef@gastronomiq.com",
+            "StrongPassword123!",
+            "Chef User",
+            new string('o', 201));
+
+        var registration = await service.RegisterAsync(request, CancellationToken.None);
+
+        Assert.Equal(RegistrationStatus.InvalidRequest, registration.Status);
+        Assert.Null(registration.Tokens);
+    }
+
     private sealed class FakeTokenService : ITokenService
     {
         public TokenResponse CreateToken(Guid userId, Guid organizationId, IEnumerable<string> permissions)

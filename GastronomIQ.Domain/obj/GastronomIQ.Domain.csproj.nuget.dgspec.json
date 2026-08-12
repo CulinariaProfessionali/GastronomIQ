@@ -10,7 +10,7 @@
         "projectUniqueName": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/GastronomIQ.Domain.csproj",
         "projectName": "GastronomIQ.Domain",
         "projectPath": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/GastronomIQ.Domain.csproj",
-        "packagesPath": "/home/runner/.nuget/packages/",
+        "packagesPath": "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages",
         "outputPath": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
@@ -56,6 +56,16 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.29, 8.0.29]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.29, 8.0.29]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
