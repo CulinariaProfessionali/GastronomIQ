@@ -1,0 +1,4 @@
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/obj/Release/net8.0/GastronomIQ.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/obj/Release/net8.0/GastronomIQ.Domain.AssemblyInfoInputs.cache
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/obj/Release/net8.0/GastronomIQ.Domain.AssemblyInfo.cs
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/obj/Release/net8.0/GastronomIQ.Domain.csproj.CoreCompileInputs.cache

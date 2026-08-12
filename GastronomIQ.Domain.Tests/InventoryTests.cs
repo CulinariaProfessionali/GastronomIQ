@@ -12,7 +12,7 @@ public class InventoryTests
             new InventoryMovementId(Guid.NewGuid()),
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new Guid(),
+            new StockLocationId(Guid.NewGuid()),
             Guid.NewGuid(),
             type,
             quantity,

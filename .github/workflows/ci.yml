@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'copilot/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  release-gates:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: gastronomiq
+          POSTGRES_USER: gastronomiq
+          POSTGRES_PASSWORD: gastronomiq
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U gastronomiq -d gastronomiq"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGPASSWORD: gastronomiq
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore GastronomIQ.sln
+
+      - name: Release gates
+        run: bash ./scripts/run-release-gates.sh

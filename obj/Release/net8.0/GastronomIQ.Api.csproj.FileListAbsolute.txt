@@ -1,0 +1,6 @@
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/rpswa.dswa.cache.json
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/GastronomIQ.Api.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/GastronomIQ.Api.AssemblyInfoInputs.cache
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/GastronomIQ.Api.AssemblyInfo.cs
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/GastronomIQ.Api.csproj.CoreCompileInputs.cache
+/home/runner/work/GastronomIQ/GastronomIQ/obj/Release/net8.0/GastronomIQ.Api.MvcApplicationPartsAssemblyInfo.cache
