@@ -30,14 +30,14 @@ GastronomIQ is a backend-first platform for culinary operations, implemented as 
 ### Run
 
 ```bash
-dotnet restore /home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.sln
-dotnet run --project /home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Api.csproj
+dotnet restore GastronomIQ.sln
+dotnet run --project GastronomIQ.Api.csproj
 ```
 
 ### Test
 
 ```bash
-dotnet test /home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.sln
+dotnet test GastronomIQ.sln
 ```
 
 ## Milestone direction
@@ -52,4 +52,4 @@ dotnet test /home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.sln
 
 For detailed Milestone 2 execution slices, ownership model, and definition-of-done gates, see:
 
-- `/home/runner/work/GastronomIQ/GastronomIQ/docs/MILESTONE_2_AUTH_EXECUTION.md`
+- `docs/MILESTONE_2_AUTH_EXECUTION.md`

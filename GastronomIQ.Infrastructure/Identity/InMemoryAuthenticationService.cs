@@ -143,11 +143,18 @@ public sealed class InMemoryAuthenticationService : IAuthenticationService
         Guid organizationId,
         IReadOnlyCollection<string> permissions)
     {
+        var now = DateTimeOffset.UtcNow;
+        foreach (var kvp in _refreshTokens)
+        {
+            if (kvp.Value.ExpiresAt <= now)
+                _refreshTokens.TryRemove(kvp.Key, out _);
+        }
+
         _refreshTokens[refreshToken] = new RefreshTokenState(
             userId,
             organizationId,
             permissions,
-            DateTimeOffset.UtcNow.Add(RefreshTokenLifetime));
+            now.Add(RefreshTokenLifetime));
     }
 
     private sealed record UserCredential(

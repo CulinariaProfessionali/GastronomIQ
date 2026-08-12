@@ -958,7 +958,7 @@ Async Operations (via message queue):
 
 ## API Endpoints Overview
 
-See `/home/runner/work/GastronomIQ/GastronomIQ/openapi.yaml` for the current OpenAPI specification.
+See `openapi.yaml` for the current OpenAPI specification.
 
 ### Authentication
 - `POST /api/v1/auth/register` - Create account
