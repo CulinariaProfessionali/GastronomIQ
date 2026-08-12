@@ -8,6 +8,25 @@ public static class AuthEndpoints
     {
         var group = app.MapGroup("/api/v1/auth").WithTags("Authentication");
 
+        group.MapPost("/register", async (
+            RegisterRequest request,
+            IAuthenticationService auth,
+            CancellationToken ct) =>
+        {
+            var result = await auth.RegisterAsync(request, ct);
+
+            return result.Status switch
+            {
+                RegistrationStatus.Success when result.Tokens is not null =>
+                    Results.Created("/api/v1/auth/register", result.Tokens),
+                RegistrationStatus.InvalidRequest =>
+                    Results.BadRequest(new { error = "Invalid registration payload." }),
+                RegistrationStatus.EmailAlreadyExists =>
+                    Results.Conflict(new { error = "Email already registered." }),
+                _ => Results.Problem("Registration failed.")
+            };
+        });
+
         group.MapPost("/login", async (
             LoginRequest request,
             IAuthenticationService auth,
