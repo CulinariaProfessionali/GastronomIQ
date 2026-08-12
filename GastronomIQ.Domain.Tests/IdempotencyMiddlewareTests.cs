@@ -3,7 +3,7 @@ using GastronomIQ.Api.Middleware;
 using GastronomIQ.Infrastructure.Platform;
 using Microsoft.AspNetCore.Http;
 
-namespace GastronomIQ.Domain.Tests;
+namespace GastronomIQ.Api.Tests;
 
 public sealed class IdempotencyMiddlewareTests
 {

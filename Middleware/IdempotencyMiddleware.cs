@@ -108,7 +108,7 @@ public sealed class IdempotencyMiddleware
 
         try
         {
-            JsonDocument.Parse(responseBody);
+            using var _ = JsonDocument.Parse(responseBody);
             return true;
         }
         catch (JsonException)
