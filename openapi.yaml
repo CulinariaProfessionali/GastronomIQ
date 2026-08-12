@@ -13,6 +13,12 @@ info:
     
     ## Multi-Tenancy
     Organization context is extracted from JWT claims. All data is automatically scoped to the user's organization.
+
+    ## Authorization model
+    Recipe and ingredient routes enforce permission claims:
+    - `recipe.read` / `recipe.manage`
+    - `ingredient.read` / `ingredient.manage`
+    Requests that provide an organization context different from the authenticated claim are rejected.
     
     ## Error Handling
     All errors follow a standardized format with error codes and detailed messages.
@@ -46,9 +52,8 @@ components:
       required:
         - email
         - password
-        - first_name
-        - last_name
-        - organization_name
+        - displayName
+        - organizationName
       properties:
         email:
           type: string
@@ -59,13 +64,10 @@ components:
           format: password
           minLength: 12
           example: SecurePassword123!
-        first_name:
+        displayName:
           type: string
-          example: Jean
-        last_name:
-          type: string
-          example: Paul
-        organization_name:
+          example: Jean Paul
+        organizationName:
           type: string
           example: Le Cordon Bleu Kitchen
 
@@ -82,35 +84,37 @@ components:
           type: string
           format: password
 
-    AuthResponse:
+    TokenResponse:
       type: object
+      required:
+        - accessToken
+        - refreshToken
+        - expiresAt
       properties:
-        statusCode:
-          type: integer
-          example: 200
-        message:
+        accessToken:
           type: string
-          example: Login successful
-        data:
-          type: object
-          properties:
-            access_token:
-              type: string
-              description: JWT access token (15 minutes)
-            refresh_token:
-              type: string
-              description: Refresh token (7 days)
-            user:
-              $ref: '#/components/schemas/User'
-            organization:
-              $ref: '#/components/schemas/Organization'
+          description: JWT access token
+        refreshToken:
+          type: string
+          description: Refresh token (7 days default for in-memory service)
+        expiresAt:
+          type: string
+          format: date-time
 
     RefreshTokenRequest:
       type: object
       required:
-        - refresh_token
+        - refreshToken
       properties:
-        refresh_token:
+        refreshToken:
+          type: string
+
+    LogoutRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
           type: string
 
     # User Schemas
@@ -915,7 +919,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/TokenResponse'
         400:
           description: Validation error
           content:
@@ -947,7 +951,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/TokenResponse'
         401:
           description: Invalid credentials
           content:
@@ -973,7 +977,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: '#/components/schemas/TokenResponse'
         401:
           description: Invalid refresh token
           content:
@@ -985,54 +989,17 @@ paths:
     post:
       tags:
         - Authentication
-      summary: Logout and revoke tokens
+      summary: Revoke refresh token
       operationId: logoutUser
-      security:
-        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
       responses:
         204:
-          description: Logout successful
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /auth/enable-2fa:
-    post:
-      tags:
-        - Authentication
-      summary: Enable two-factor authentication
-      operationId: enableTwoFA
-      security:
-        - BearerAuth: []
-      responses:
-        200:
-          description: 2FA enabled
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                  message:
-                    type: string
-                  data:
-                    type: object
-                    properties:
-                      secret:
-                        type: string
-                        description: Base32 encoded secret for QR code
-                      qr_code_url:
-                        type: string
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Logout successful (idempotent)
 
   # Organization Endpoints
   /organizations:

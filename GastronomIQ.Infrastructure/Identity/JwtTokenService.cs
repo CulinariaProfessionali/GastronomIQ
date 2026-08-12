@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using GastronomIQ.Application.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 
 namespace GastronomIQ.Infrastructure.Identity;
 
@@ -14,11 +15,14 @@ public sealed class JwtTokenService : ITokenService
 
     public TokenResponse CreateToken(Guid userId, Guid organizationId, IEnumerable<string> permissions)
     {
-        var key = _configuration["Jwt:SigningKey"]
-                  ?? throw new InvalidOperationException("Jwt:SigningKey is not configured.");
+        var key = _configuration["Jwt:SigningKey"];
+        if (string.IsNullOrWhiteSpace(key))
+            throw new InvalidOperationException("Jwt:SigningKey is not configured.");
 
         var expires = DateTimeOffset.UtcNow.AddMinutes(
             _configuration.GetValue<int?>("Jwt:AccessTokenMinutes") ?? 30);
+        var issuer = _configuration["Jwt:Issuer"];
+        var audience = _configuration["Jwt:Audience"];
 
         var claims = new List<Claim>
         {
@@ -33,6 +37,8 @@ public sealed class JwtTokenService : ITokenService
             SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
+            issuer: issuer,
+            audience: audience,
             claims: claims,
             expires: expires.UtcDateTime,
             signingCredentials: credentials);

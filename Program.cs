@@ -1,3 +1,4 @@
+using System.Text;
 using GastronomIQ.Api.Configuration;
 using GastronomIQ.Api.Endpoints;
 using GastronomIQ.Api.Middleware;
@@ -26,13 +27,38 @@ using GastronomIQ.Infrastructure.Production;
 using GastronomIQ.Infrastructure.Recipes;
 using GastronomIQ.Infrastructure.Reporting;
 using GastronomIQ.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
+var jwtSigningKey = builder.Configuration["Jwt:SigningKey"];
+if (string.IsNullOrWhiteSpace(jwtSigningKey))
+    throw new InvalidOperationException("Jwt:SigningKey must be configured.");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = !string.IsNullOrWhiteSpace(jwtIssuer),
+            ValidateAudience = !string.IsNullOrWhiteSpace(jwtAudience),
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey)),
+            ClockSkew = TimeSpan.FromSeconds(30)
+        };
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+builder.Services.AddSingleton<IPasswordHasher, InMemoryPasswordHasher>();
 builder.Services.AddSingleton<IAuthenticationService, InMemoryAuthenticationService>();
 builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
 builder.Services.AddSingleton<IEntitlementService, InMemoryEntitlementService>();
@@ -81,16 +107,14 @@ var configuration = new ProductionConfiguration {
 };
 
 builder.Services.AddSingleton(configuration);
-builder.Services.AddSingleton(new PostgresPersistenceOptions {
-    ConnectionString = configuration.DatabaseConnectionString,
-    RequireSsl = configuration.Environment == "Production"
-});
 
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseMiddleware<IdempotencyMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (configuration.RequireHttps)
     app.UseHttpsRedirection();
@@ -106,9 +130,6 @@ app.MapProcurementEndpoints();
 app.MapProductionEndpoints();
 app.MapMenuEngineeringEndpoints();
 app.MapReportingEndpoints();
-
-if (app.Environment.IsDevelopment())
-    app.MapOpenApi();
 
 app.Run();
 

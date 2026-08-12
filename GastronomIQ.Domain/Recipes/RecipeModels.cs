@@ -10,26 +10,35 @@ public enum RecipeVersionStatus
 public sealed record RecipeId(Guid Value);
 public sealed record RecipeVersionId(Guid Value);
 
-public sealed record RecipeIngredientLine(
-    Guid IngredientId,
-    decimal Quantity,
-    Guid UnitId,
-    decimal? WastePercentage = null)
+public sealed record RecipeIngredientLine
 {
-    public RecipeIngredientLine
-        : this(IngredientId, Quantity, UnitId, WastePercentage)
+    public Guid IngredientId { get; init; }
+    public decimal Quantity { get; init; }
+    public Guid UnitId { get; init; }
+    public decimal? WastePercentage { get; init; }
+
+    public RecipeIngredientLine(
+        Guid ingredientId,
+        decimal quantity,
+        Guid unitId,
+        decimal? wastePercentage = null)
     {
-        if (IngredientId == Guid.Empty)
+        if (ingredientId == Guid.Empty)
             throw new ArgumentException("Ingredient is required.");
 
-        if (Quantity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(Quantity));
+        if (quantity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(quantity));
 
-        if (UnitId == Guid.Empty)
+        if (unitId == Guid.Empty)
             throw new ArgumentException("Unit is required.");
 
-        if (WastePercentage is < 0 or > 100)
-            throw new ArgumentOutOfRangeException(nameof(WastePercentage));
+        if (wastePercentage is < 0 or > 100)
+            throw new ArgumentOutOfRangeException(nameof(wastePercentage));
+
+        IngredientId = ingredientId;
+        Quantity = quantity;
+        UnitId = unitId;
+        WastePercentage = wastePercentage;
     }
 }
 

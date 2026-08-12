@@ -73,51 +73,34 @@
     ]
   },
   "techStack": {
-    "runtime": "Node.js 18+",
-    "backend": "Express.js 4.x",
-    "database": "PostgreSQL 14+",
-    "language": "TypeScript",
-    "authentication": "JWT + bcrypt + OAuth2 (optional)",
-    "validation": "Zod",
-    "logging": "Winston",
-    "testing": "Jest + Supertest",
+    "runtime": ".NET 8",
+    "backend": "ASP.NET Core Minimal APIs",
+    "database": "PostgreSQL (optional in-memory adapters for local/dev)",
+    "language": "C#",
+    "authentication": "JWT + refresh token lifecycle + RBAC permissions",
+    "validation": "Application-layer input validation",
+    "logging": "ASP.NET Core logging pipeline",
+    "testing": "xUnit",
     "containerization": "Docker + Docker Compose",
-    "orm": "Node-pg (raw queries or Prisma planned)"
+    "orm": "Npgsql + focused persistence services"
   },
   "projectStructure": {
-    "src": {
-      "api": "API routes and controllers (recipes, ingredients, users, health checks)",
-      "services": "Business logic layer (RecipeService, IngredientService, NutritionService, AuthService)",
-      "models": "Data models and database schemas",
-      "middleware": "Express middleware (authentication, error handling, validation)",
-      "utils": "Utilities and helpers (logger, validators, formatters, constants)",
-      "config": "Configuration files (database, server)",
-      "index.ts": "Application entry point"
-    },
+    "apiHost": "Program.cs + Endpoints + Middleware + Security + Configuration",
+    "application": "GastronomIQ.Application (contracts and application policies)",
+    "domain": "GastronomIQ.Domain (domain models and rules)",
+    "infrastructure": "GastronomIQ.Infrastructure (identity, recipes, inventory, reporting, persistence)",
     "tests": {
-      "unit": "Unit tests for services and utilities",
-      "integration": "Integration tests for API endpoints",
-      "fixtures": "Test data and mocks",
-      "setup.ts": "Test configuration"
+      "application": "GastronomIQ.Application.Tests",
+      "domain": "GastronomIQ.Domain.Tests"
     },
-    "migrations": "Database schema migrations (001_initial_schema.sql)",
-    "scripts": "Utility scripts (seed database, bootstrap, lint-fix)",
-    "docs": "Documentation (ARCHITECTURE, API, DATABASE, CONTRIBUTING, DEPLOYMENT)",
-    ".github": "GitHub Actions workflows (CI/CD pipelines)"
+    "database": "database schema and migrations",
+    "docs": "Architecture, data model, and milestone execution docs"
   },
   "availableScripts": {
-    "dev": "Start development server",
-    "build": "Build for production",
-    "start": "Start production server",
-    "test": "Run test suite",
-    "test:watch": "Run tests in watch mode",
-    "test:coverage": "Generate coverage report",
-    "lint": "Run ESLint",
-    "lint:fix": "Fix linting issues",
-    "format": "Format code with Prettier",
-    "db:migrate": "Run database migrations",
-    "db:seed": "Seed database with sample data",
-    "type-check": "Run TypeScript type checking"
+    "restore": "dotnet restore GastronomIQ.sln",
+    "build": "dotnet build GastronomIQ.sln",
+    "run": "dotnet run --project GastronomIQ.Api.csproj",
+    "test": "dotnet test GastronomIQ.sln"
   },
   "environmentVariables": {
     "server": {
@@ -190,17 +173,38 @@
   "cicd": {
     "platform": "GitHub Actions",
     "workflows": [
-      "ci.yml - Continuous Integration (test, lint, build)",
-      "deploy.yml - Continuous Deployment (build and deploy)"
+      "ci.yml - Continuous Integration (build, test)",
+      "deploy.yml - Continuous Deployment"
     ],
-    "supportedNodeVersions": ["18.x", "20.x"],
-    "autoTests": "Jest with coverage reporting",
-    "codeCoverage": "70% minimum threshold"
+    "supportedDotnetVersions": [
+      "8.0.x"
+    ],
+    "autoTests": "xUnit via dotnet test",
+    "codeCoverage": "coverage collector configured in test projects"
   },
   "license": {
     "type": "MIT",
     "url": "https://github.com/CulinariaProfessionali/GastronomIQ/blob/main/LICENSE"
   },
   "exportedAt": "2026-07-20T07:15:00Z",
-  "exportVersion": "1.0"
+  "exportVersion": "1.0",
+  "milestones": {
+    "current": {
+      "name": "Milestone 2 - Authentication & Identity",
+      "scope": [
+        "registration",
+        "login",
+        "refresh token lifecycle",
+        "logout/revocation",
+        "RBAC permissions",
+        "organization scoping",
+        "security hardening"
+      ],
+      "executionDoc": "docs/MILESTONE_2_AUTH_EXECUTION.md"
+    },
+    "next": {
+      "name": "Milestone 3 - Recipe and Ingredient Workflows",
+      "approach": "Use same vertical-slice and definition-of-done gates as Milestone 2"
+    }
+  }
 }
