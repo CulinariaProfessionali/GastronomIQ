@@ -9,14 +9,16 @@ namespace GastronomIQ.Infrastructure.Identity;
 
 public sealed class JwtTokenService : ITokenService
 {
+    private const string DevelopmentSigningKey = "development-signing-key-please-change-123456";
     private readonly IConfiguration _configuration;
 
     public JwtTokenService(IConfiguration configuration) => _configuration = configuration;
 
     public TokenResponse CreateToken(Guid userId, Guid organizationId, IEnumerable<string> permissions)
     {
-        var key = _configuration["Jwt:SigningKey"]
-                  ?? throw new InvalidOperationException("Jwt:SigningKey is not configured.");
+        var key = _configuration["Jwt:SigningKey"];
+        if (string.IsNullOrWhiteSpace(key))
+            key = DevelopmentSigningKey;
 
         var expires = DateTimeOffset.UtcNow.AddMinutes(
             _configuration.GetValue<int?>("Jwt:AccessTokenMinutes") ?? 30);

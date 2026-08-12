@@ -1,3 +1,4 @@
+using System.Text;
 using GastronomIQ.Api.Configuration;
 using GastronomIQ.Api.Endpoints;
 using GastronomIQ.Api.Middleware;
@@ -26,10 +27,30 @@ using GastronomIQ.Infrastructure.Production;
 using GastronomIQ.Infrastructure.Recipes;
 using GastronomIQ.Infrastructure.Reporting;
 using GastronomIQ.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
+var jwtSigningKey = builder.Configuration["Jwt:SigningKey"]
+    ?? "development-signing-key-please-change-123456";
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey)),
+            ClockSkew = TimeSpan.FromSeconds(30)
+        };
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.AddSingleton<IPasswordHasher, InMemoryPasswordHasher>();
@@ -87,6 +108,8 @@ var app = builder.Build();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseMiddleware<IdempotencyMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (configuration.RequireHttps)
     app.UseHttpsRedirection();

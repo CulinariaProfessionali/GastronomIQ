@@ -13,6 +13,12 @@ info:
     
     ## Multi-Tenancy
     Organization context is extracted from JWT claims. All data is automatically scoped to the user's organization.
+
+    ## Authorization model
+    Recipe and ingredient routes enforce permission claims:
+    - `recipe.read` / `recipe.manage`
+    - `ingredient.read` / `ingredient.manage`
+    Requests that provide an organization context different from the authenticated claim are rejected.
     
     ## Error Handling
     All errors follow a standardized format with error codes and detailed messages.

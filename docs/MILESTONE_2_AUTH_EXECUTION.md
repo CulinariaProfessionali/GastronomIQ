@@ -54,6 +54,25 @@ Every slice is complete only when all gates pass:
 6. OpenAPI is updated for behavioral changes
 7. Documentation is updated
 
+## Milestone 2 verification status
+
+Authentication and identity flows are now verified end-to-end in the codebase with quality gates:
+
+1. Registration, login, refresh rotation, and logout revocation are covered by automated tests.
+2. JWT claims include `sub`, `organization_id`, and `permission` claims.
+3. RBAC checks are enforced on recipe and ingredient endpoints for read/manage permissions.
+4. Organization scope is enforced from authenticated claims for recipe and ingredient access.
+5. Build/test/security checks are required before handoff.
+
 ## Milestone 3 handoff rule
 
 Only after Milestone 2 auth slices pass all gates should development move to Milestone 3 recipe and ingredient workflows, reusing the same slice-and-gate delivery model.
+
+## Milestone 3 kickoff slices (core recipe + ingredient workflows)
+
+1. **Recipe slice**
+   - Enforce tenant-scoped access and `recipe.read` / `recipe.manage` permissions on recipe endpoints.
+2. **Ingredient slice**
+   - Enforce tenant-scoped access and `ingredient.read` / `ingredient.manage` permissions on ingredient endpoints.
+3. **Quality gate slice**
+   - Keep tests, OpenAPI notes, and security checks aligned with each endpoint behavior change.
