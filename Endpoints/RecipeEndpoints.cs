@@ -19,16 +19,12 @@ public static class RecipeEndpoints
             IRecipeService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeManage))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeManage,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var effectiveOrganizationId = request.OrganizationId == Guid.Empty
                 ? context.OrganizationId
@@ -49,18 +45,17 @@ public static class RecipeEndpoints
             IRecipeService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeManage,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeManage))
-                return Results.Forbid();
-
-            var version = await service.CreateVersionAsync(request, ct);
+            var version = await service.CreateVersionAsync(
+                context.OrganizationId,
+                request,
+                ct);
             return Results.Created(
                 $"/api/v1/recipe-versions/{version.Id}",
                 version);
@@ -74,21 +69,20 @@ public static class RecipeEndpoints
             IRecipeService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeManage))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeManage,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             if (versionId != request.RecipeVersionId)
                 return Results.BadRequest(new { error = "Version ID mismatch." });
 
-            await service.AddIngredientAsync(request, ct);
+            await service.AddIngredientAsync(
+                context.OrganizationId,
+                request,
+                ct);
             return Results.NoContent();
         });
 
@@ -99,18 +93,17 @@ public static class RecipeEndpoints
             IRecipeService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeManage,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeManage))
-                return Results.Forbid();
-
-            await service.PublishAsync(versionId, ct);
+            await service.PublishAsync(
+                context.OrganizationId,
+                versionId,
+                ct);
             return Results.NoContent();
         });
 
@@ -122,23 +115,20 @@ public static class RecipeEndpoints
             IRecipeService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeRead))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeRead,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var scopedOrganizationId = organizationId == Guid.Empty
                 ? context.OrganizationId
                 : organizationId;
 
-            if (!authorization.BelongsToOrganization(context, scopedOrganizationId))
-                return Results.Forbid();
+            var scopeResult = authorization.RequireOrganizationScope(context, scopedOrganizationId);
+            if (scopeResult is not null)
+                return scopeResult;
 
             var recipe = await service.GetAsync(
                 scopedOrganizationId,
@@ -160,23 +150,20 @@ public static class RecipeEndpoints
             int pageSize,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.RecipeRead))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.RecipeRead,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var scopedOrganizationId = organizationId == Guid.Empty
                 ? context.OrganizationId
                 : organizationId;
 
-            if (!authorization.BelongsToOrganization(context, scopedOrganizationId))
-                return Results.Forbid();
+            var scopeResult = authorization.RequireOrganizationScope(context, scopedOrganizationId);
+            if (scopeResult is not null)
+                return scopeResult;
 
             page = page <= 0 ? 1 : page;
             pageSize = pageSize <= 0 ? 25 : Math.Min(pageSize, 100);

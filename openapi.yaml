@@ -999,13 +999,7 @@ paths:
               $ref: '#/components/schemas/LogoutRequest'
       responses:
         204:
-          description: Logout successful
-        401:
-          description: Invalid refresh token
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          description: Logout successful (idempotent)
 
   # Organization Endpoints
   /organizations:

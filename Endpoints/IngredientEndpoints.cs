@@ -19,23 +19,20 @@ public static class IngredientEndpoints
             IIngredientService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.IngredientManage))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.IngredientManage,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var effectiveOrganizationId = request.OrganizationId == Guid.Empty
                 ? context.OrganizationId
                 : request.OrganizationId;
 
-            if (!authorization.BelongsToOrganization(context, effectiveOrganizationId))
-                return Results.Forbid();
+            var scopeResult = authorization.RequireOrganizationScope(context, effectiveOrganizationId);
+            if (scopeResult is not null)
+                return scopeResult;
 
             var scopedRequest = request with { OrganizationId = effectiveOrganizationId };
             var item = await service.CreateAsync(scopedRequest, ct);
@@ -49,16 +46,12 @@ public static class IngredientEndpoints
             IIngredientService service,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.IngredientRead))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.IngredientRead,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var org = context.OrganizationId;
 
@@ -75,16 +68,12 @@ public static class IngredientEndpoints
             int pageSize,
             CancellationToken ct) =>
         {
-            var context = new AuthorizationContext(
-                http.User.GetUserId(),
-                http.User.GetOrganizationId(),
-                http.User.GetPermissions());
-
-            if (context.UserId == Guid.Empty || context.OrganizationId == Guid.Empty)
-                return Results.Unauthorized();
-
-            if (!authorization.HasPermission(context, PermissionCatalogue.IngredientRead))
-                return Results.Forbid();
+            var authResult = http.RequirePermission(
+                authorization,
+                PermissionCatalogue.IngredientRead,
+                out var context);
+            if (authResult is not null)
+                return authResult;
 
             var org = context.OrganizationId;
 

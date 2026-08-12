@@ -48,14 +48,17 @@ public interface IRecipeService
         CancellationToken cancellationToken);
 
     Task<RecipeVersionDto> CreateVersionAsync(
+        Guid organizationId,
         CreateRecipeVersionRequest request,
         CancellationToken cancellationToken);
 
     Task AddIngredientAsync(
+        Guid organizationId,
         AddRecipeIngredientRequest request,
         CancellationToken cancellationToken);
 
     Task PublishAsync(
+        Guid organizationId,
         Guid recipeVersionId,
         CancellationToken cancellationToken);
 

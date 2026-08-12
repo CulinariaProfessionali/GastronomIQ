@@ -20,11 +20,14 @@ public sealed class InMemoryRecipeService : IRecipeService
     }
 
     public Task<RecipeVersionDto> CreateVersionAsync(
+        Guid organizationId,
         CreateRecipeVersionRequest request,
         CancellationToken cancellationToken)
     {
         if (!_recipes.TryGetValue(request.RecipeId, out var recipe))
             throw new KeyNotFoundException("Recipe not found.");
+        if (recipe.OrganizationId != organizationId)
+            throw new UnauthorizedAccessException("Recipe belongs to another organization.");
 
         var version = recipe.CreateDraft(
             request.YieldQuantity,
@@ -37,12 +40,15 @@ public sealed class InMemoryRecipeService : IRecipeService
     }
 
     public Task AddIngredientAsync(
+        Guid organizationId,
         AddRecipeIngredientRequest request,
         CancellationToken cancellationToken)
     {
         if (!_versionToRecipe.TryGetValue(request.RecipeVersionId, out var recipeId) ||
             !_recipes.TryGetValue(recipeId, out var recipe))
             throw new KeyNotFoundException("Recipe version not found.");
+        if (recipe.OrganizationId != organizationId)
+            throw new UnauthorizedAccessException("Recipe version belongs to another organization.");
 
         var version = recipe.Versions.First(x =>
             x.Id.Value == request.RecipeVersionId);
@@ -57,12 +63,15 @@ public sealed class InMemoryRecipeService : IRecipeService
     }
 
     public Task PublishAsync(
+        Guid organizationId,
         Guid recipeVersionId,
         CancellationToken cancellationToken)
     {
         if (!_versionToRecipe.TryGetValue(recipeVersionId, out var recipeId) ||
             !_recipes.TryGetValue(recipeId, out var recipe))
             throw new KeyNotFoundException("Recipe version not found.");
+        if (recipe.OrganizationId != organizationId)
+            throw new UnauthorizedAccessException("Recipe version belongs to another organization.");
 
         var version = recipe.Versions.First(x => x.Id.Value == recipeVersionId);
         version.Publish();

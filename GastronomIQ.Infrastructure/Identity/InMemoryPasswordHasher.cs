@@ -7,7 +7,7 @@ public sealed class InMemoryPasswordHasher : IPasswordHasher
 {
     private const int SaltSize = 16;
     private const int HashSize = 32;
-    private const int Iterations = 100_000;
+    private const int Iterations = 600_000;
 
     public string Hash(string password)
     {

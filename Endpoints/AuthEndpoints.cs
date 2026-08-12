@@ -50,8 +50,8 @@ public static class AuthEndpoints
             IAuthenticationService auth,
             CancellationToken ct) =>
         {
-            var revoked = await auth.LogoutAsync(request, ct);
-            return revoked ? Results.NoContent() : Results.Unauthorized();
+            _ = await auth.LogoutAsync(request, ct);
+            return Results.NoContent();
         });
     }
 }

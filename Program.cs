@@ -33,8 +33,11 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
-var jwtSigningKey = builder.Configuration["Jwt:SigningKey"]
-    ?? "development-signing-key-please-change-123456";
+var jwtSigningKey = builder.Configuration["Jwt:SigningKey"];
+if (string.IsNullOrWhiteSpace(jwtSigningKey))
+    throw new InvalidOperationException("Jwt:SigningKey must be configured.");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,10 +45,12 @@ builder.Services
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = !string.IsNullOrWhiteSpace(jwtIssuer),
+            ValidateAudience = !string.IsNullOrWhiteSpace(jwtAudience),
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey)),
             ClockSkew = TimeSpan.FromSeconds(30)
         };
