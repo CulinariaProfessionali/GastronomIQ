@@ -31,7 +31,7 @@ public sealed class InMemoryRecipeService : IRecipeService
             request.YieldUnitId,
             request.Method);
 
-        _versionToRecipe[version.Id.Value.Value] = recipe.Id.Value;
+        _versionToRecipe[version.Id.Value] = recipe.Id.Value;
 
         return Task.FromResult(Map(version));
     }

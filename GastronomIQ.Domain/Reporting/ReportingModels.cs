@@ -1,14 +1,16 @@
 namespace GastronomIQ.Domain.Reporting;
 
-public sealed record ReportingPeriod(
-    DateOnly StartDate,
-    DateOnly EndDate)
+public sealed record ReportingPeriod
 {
-    public ReportingPeriod
-        : this(StartDate, EndDate)
+    public DateOnly StartDate { get; init; }
+    public DateOnly EndDate { get; init; }
+
+    public ReportingPeriod(DateOnly StartDate, DateOnly EndDate)
     {
         if (EndDate < StartDate)
             throw new ArgumentException("End date cannot precede start date.");
+        this.StartDate = StartDate;
+        this.EndDate = EndDate;
     }
 }
 
