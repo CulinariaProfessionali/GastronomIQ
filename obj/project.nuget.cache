@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "DhjtGQud19c=",
+  "dgSpecHash": "EN4+5AgcGeQ=",
   "success": true,
   "projectFilePath": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Api.csproj",
   "expectedPackageFiles": [
+    "/home/runner/.nuget/packages/microsoft.aspnetcore.openapi/8.0.0/microsoft.aspnetcore.openapi.8.0.0.nupkg.sha512",
     "/home/runner/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
     "/home/runner/.nuget/packages/microsoft.extensions.configuration.binder/8.0.0/microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
     "/home/runner/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
@@ -13,6 +14,7 @@
     "/home/runner/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.0.2/microsoft.identitymodel.jsonwebtokens.8.0.2.nupkg.sha512",
     "/home/runner/.nuget/packages/microsoft.identitymodel.logging/8.0.2/microsoft.identitymodel.logging.8.0.2.nupkg.sha512",
     "/home/runner/.nuget/packages/microsoft.identitymodel.tokens/8.0.2/microsoft.identitymodel.tokens.8.0.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
     "/home/runner/.nuget/packages/npgsql/8.0.6/npgsql.8.0.6.nupkg.sha512",
     "/home/runner/.nuget/packages/system.identitymodel.tokens.jwt/8.0.2/system.identitymodel.tokens.jwt.8.0.2.nupkg.sha512"
   ],
