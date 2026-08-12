@@ -5,9 +5,14 @@ namespace GastronomIQ.Infrastructure.Identity;
 public sealed class InMemoryAuthenticationService : IAuthenticationService
 {
     private readonly ITokenService _tokens;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly Dictionary<string, UserCredential> _users = new(StringComparer.OrdinalIgnoreCase);
 
-    public InMemoryAuthenticationService(ITokenService tokens) => _tokens = tokens;
+    public InMemoryAuthenticationService(ITokenService tokens, IPasswordHasher passwordHasher)
+    {
+        _tokens = tokens;
+        _passwordHasher = passwordHasher;
+    }
 
     public Task<RegistrationResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
@@ -33,7 +38,7 @@ public sealed class InMemoryAuthenticationService : IAuthenticationService
         var user = new UserCredential(
             Guid.NewGuid(),
             email,
-            request.Password,
+            _passwordHasher.Hash(request.Password),
             Guid.NewGuid(),
             new[]
             {
@@ -59,7 +64,7 @@ public sealed class InMemoryAuthenticationService : IAuthenticationService
             return Task.FromResult<TokenResponse?>(null);
 
         var email = request.Email.Trim().ToLowerInvariant();
-        if (!_users.TryGetValue(email, out var user) || user.Password != request.Password)
+        if (!_users.TryGetValue(email, out var user) || !_passwordHasher.Verify(request.Password, user.PasswordHash))
             return Task.FromResult<TokenResponse?>(null);
 
         return Task.FromResult<TokenResponse?>(
@@ -78,7 +83,7 @@ public sealed class InMemoryAuthenticationService : IAuthenticationService
     private sealed record UserCredential(
         Guid UserId,
         string Email,
-        string Password,
+        string PasswordHash,
         Guid OrganizationId,
         IReadOnlyCollection<string> Permissions);
 }

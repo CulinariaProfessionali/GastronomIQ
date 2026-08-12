@@ -8,7 +8,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task Register_allows_followup_login()
     {
-        var service = new InMemoryAuthenticationService(new FakeTokenService());
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
         var request = new RegisterRequest(
             "chef@gastronomiq.com",
             "StrongPassword123!",
@@ -28,7 +28,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task Register_rejects_duplicate_email()
     {
-        var service = new InMemoryAuthenticationService(new FakeTokenService());
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
         var request = new RegisterRequest(
             "chef@gastronomiq.com",
             "StrongPassword123!",
@@ -45,7 +45,7 @@ public class AuthenticationServiceTests
     [Fact]
     public async Task Login_rejects_wrong_password_for_registered_user()
     {
-        var service = new InMemoryAuthenticationService(new FakeTokenService());
+        var service = new InMemoryAuthenticationService(new FakeTokenService(), new InMemoryPasswordHasher());
         var request = new RegisterRequest(
             "chef@gastronomiq.com",
             "StrongPassword123!",

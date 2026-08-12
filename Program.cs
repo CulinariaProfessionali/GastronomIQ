@@ -32,6 +32,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHealthChecks();
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
+builder.Services.AddSingleton<IPasswordHasher, InMemoryPasswordHasher>();
 builder.Services.AddSingleton<IAuthenticationService, InMemoryAuthenticationService>();
 builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
 builder.Services.AddSingleton<IEntitlementService, InMemoryEntitlementService>();
