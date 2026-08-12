@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GastronomIQ.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a249168ab0419b24840eae656df8c78b2eda749e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da1b850abafaa91ced5a37a0cac991552d24ae9f")]
 [assembly: System.Reflection.AssemblyProductAttribute("GastronomIQ.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GastronomIQ.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
