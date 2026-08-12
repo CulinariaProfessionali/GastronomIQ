@@ -83,52 +83,34 @@
   </projectDetails>
   
   <techStack>
-    <runtime>Node.js 18+</runtime>
-    <backend>Express.js 4.x</backend>
-    <database>PostgreSQL 14+</database>
-    <language>TypeScript</language>
-    <authentication>JWT + bcrypt + OAuth2 (optional)</authentication>
-    <validation>Zod</validation>
-    <logging>Winston</logging>
-    <testing>Jest + Supertest</testing>
+    <runtime>.NET 8</runtime>
+    <backend>ASP.NET Core Minimal APIs</backend>
+    <database>PostgreSQL (optional in-memory adapters for local/dev)</database>
+    <language>C#</language>
+    <authentication>JWT + refresh token lifecycle + RBAC permissions</authentication>
+    <validation>Application-layer input validation</validation>
+    <logging>ASP.NET Core logging pipeline</logging>
+    <testing>xUnit</testing>
     <containerization>Docker + Docker Compose</containerization>
-    <orm>Node-pg (raw queries or Prisma planned)</orm>
+    <orm>Npgsql + focused persistence services</orm>
   </techStack>
   
   <projectStructure>
-    <directory name="src">
-      <subdirectory name="api" description="API routes and controllers"/>
-      <subdirectory name="services" description="Business logic layer"/>
-      <subdirectory name="models" description="Data models and database schemas"/>
-      <subdirectory name="middleware" description="Express middleware"/>
-      <subdirectory name="utils" description="Utilities and helpers"/>
-      <subdirectory name="config" description="Configuration files"/>
-      <file name="index.ts" description="Application entry point"/>
-    </directory>
-    <directory name="tests">
-      <subdirectory name="unit" description="Unit tests"/>
-      <subdirectory name="integration" description="Integration tests"/>
-      <subdirectory name="fixtures" description="Test data and mocks"/>
-    </directory>
-    <directory name="migrations" description="Database schema migrations"/>
-    <directory name="scripts" description="Utility scripts"/>
-    <directory name="docs" description="Documentation"/>
-    <directory name=".github" description="GitHub Actions workflows"/>
+    <directory name="apiHost" description="Program.cs + Endpoints + Middleware + Security + Configuration"/>
+    <directory name="GastronomIQ.Application" description="Application contracts and policies"/>
+    <directory name="GastronomIQ.Domain" description="Domain models and rules"/>
+    <directory name="GastronomIQ.Infrastructure" description="Identity, recipes, inventory, reporting, persistence"/>
+    <directory name="GastronomIQ.Application.Tests" description="Application and endpoint integration tests"/>
+    <directory name="GastronomIQ.Domain.Tests" description="Domain and workflow tests"/>
+    <directory name="database" description="Schema and migration assets"/>
+    <directory name="docs" description="Architecture, database, and milestone execution docs"/>
   </projectStructure>
   
   <availableScripts>
-    <script name="dev" description="Start development server"/>
-    <script name="build" description="Build for production"/>
-    <script name="start" description="Start production server"/>
-    <script name="test" description="Run test suite"/>
-    <script name="test:watch" description="Run tests in watch mode"/>
-    <script name="test:coverage" description="Generate coverage report"/>
-    <script name="lint" description="Run ESLint"/>
-    <script name="lint:fix" description="Fix linting issues"/>
-    <script name="format" description="Format code with Prettier"/>
-    <script name="db:migrate" description="Run database migrations"/>
-    <script name="db:seed" description="Seed database with sample data"/>
-    <script name="type-check" description="Run TypeScript type checking"/>
+    <script name="restore" description="dotnet restore GastronomIQ.sln"/>
+    <script name="build" description="dotnet build GastronomIQ.sln"/>
+    <script name="run" description="dotnet run --project GastronomIQ.Api.csproj"/>
+    <script name="test" description="dotnet test GastronomIQ.sln"/>
   </availableScripts>
   
   <environmentVariables>
@@ -214,17 +196,32 @@
   <cicd>
     <platform>GitHub Actions</platform>
     <workflows>
-      <workflow name="ci.yml" description="Continuous Integration"/>
+      <workflow name="ci.yml" description="Continuous Integration (build and test)"/>
       <workflow name="deploy.yml" description="Continuous Deployment"/>
     </workflows>
-    <supportedNodeVersions>
-      <version>18.x</version>
-      <version>20.x</version>
-    </supportedNodeVersions>
-    <testing>Jest with coverage reporting</testing>
-    <codeCoverageThreshold>70%</codeCoverageThreshold>
+    <supportedDotnetVersions>
+      <version>8.0.x</version>
+    </supportedDotnetVersions>
+    <testing>xUnit via dotnet test</testing>
+    <codeCoverageThreshold>coverage collector configured in test projects</codeCoverageThreshold>
   </cicd>
   
+
+  <milestones>
+    <current name="Milestone 2 - Authentication &amp; Identity">
+      <scope>registration</scope>
+      <scope>login</scope>
+      <scope>refresh token lifecycle</scope>
+      <scope>logout/revocation</scope>
+      <scope>RBAC permissions</scope>
+      <scope>organization scoping</scope>
+      <scope>security hardening</scope>
+      <executionDoc>docs/MILESTONE_2_AUTH_EXECUTION.md</executionDoc>
+    </current>
+    <next name="Milestone 3 - Recipe and Ingredient Workflows">
+      <approach>Use the same vertical-slice and definition-of-done gates as Milestone 2</approach>
+    </next>
+  </milestones>
   <license>
     <type>MIT</type>
     <url>https://github.com/CulinariaProfessionali/GastronomIQ/blob/main/LICENSE</url>

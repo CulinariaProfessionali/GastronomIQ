@@ -44,5 +44,14 @@ public static class AuthEndpoints
             var result = await auth.RefreshAsync(request, ct);
             return result is null ? Results.Unauthorized() : Results.Ok(result);
         });
+
+        group.MapPost("/logout", async (
+            LogoutRequest request,
+            IAuthenticationService auth,
+            CancellationToken ct) =>
+        {
+            var revoked = await auth.LogoutAsync(request, ct);
+            return revoked ? Results.NoContent() : Results.Unauthorized();
+        });
     }
 }

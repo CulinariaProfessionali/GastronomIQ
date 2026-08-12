@@ -958,14 +958,13 @@ Async Operations (via message queue):
 
 ## API Endpoints Overview
 
-See `docs/API.md` for complete OpenAPI specification.
+See `/home/runner/work/GastronomIQ/GastronomIQ/openapi.yaml` for the current OpenAPI specification.
 
 ### Authentication
 - `POST /api/v1/auth/register` - Create account
 - `POST /api/v1/auth/login` - Obtain tokens
 - `POST /api/v1/auth/refresh` - Refresh access token
 - `POST /api/v1/auth/logout` - Revoke tokens
-- `POST /api/v1/auth/enable-2fa` - Enable 2FA
 
 ### Organizations
 - `POST /api/v1/organizations` - Create org
