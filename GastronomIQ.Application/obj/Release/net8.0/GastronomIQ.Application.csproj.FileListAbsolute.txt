@@ -1,0 +1,15 @@
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.csproj.AssemblyReference.cache
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.AssemblyInfoInputs.cache
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.AssemblyInfo.cs
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.csproj.CoreCompileInputs.cache
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/bin/Release/net8.0/GastronomIQ.Application.deps.json
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/bin/Release/net8.0/GastronomIQ.Application.dll
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/bin/Release/net8.0/GastronomIQ.Application.pdb
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/bin/Release/net8.0/GastronomIQ.Domain.dll
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/bin/Release/net8.0/GastronomIQ.Domain.pdb
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/Gastrono.89DCE93F.Up2Date
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.dll
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/refint/GastronomIQ.Application.dll
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/GastronomIQ.Application.pdb
+/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Application/obj/Release/net8.0/ref/GastronomIQ.Application.dll
