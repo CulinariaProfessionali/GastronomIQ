@@ -10,6 +10,9 @@
     <ProjectReference Include="GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="GastronomIQ.Application/**/*.cs" />
     <Compile Remove="GastronomIQ.Application.Tests/**/*.cs" />
     <Compile Remove="GastronomIQ.Domain/**/*.cs" />
