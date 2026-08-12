@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../GastronomIQ.Api.csproj" />
     <ProjectReference Include="../GastronomIQ.Domain/GastronomIQ.Domain.csproj" />
     <ProjectReference Include="../GastronomIQ.Application/GastronomIQ.Application.csproj" />
+    <ProjectReference Include="../GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
