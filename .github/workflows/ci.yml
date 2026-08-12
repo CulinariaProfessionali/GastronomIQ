@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  build-test-migrate:
+  release-gates:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -43,13 +43,5 @@ jobs:
       - name: Restore
         run: dotnet restore GastronomIQ.sln
 
-      - name: Build
-        run: dotnet build GastronomIQ.sln --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test GastronomIQ.sln --configuration Release --no-build
-
-      - name: Migration smoke
-        run: |
-          psql -h localhost -U gastronomiq -d gastronomiq -v ON_ERROR_STOP=1 -f database/schema/001_initial_schema.sql
-          psql -h localhost -U gastronomiq -d gastronomiq -v ON_ERROR_STOP=1 -c "DO $$ BEGIN IF to_regclass('public.idempotency_records') IS NULL THEN RAISE EXCEPTION 'idempotency_records table is missing'; END IF; IF to_regclass('public.audit_events') IS NULL THEN RAISE EXCEPTION 'audit_events table is missing'; END IF; END $$;"
+      - name: Release gates
+        run: bash ./scripts/run-release-gates.sh
