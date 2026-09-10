@@ -29,7 +29,6 @@ using GastronomIQ.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
@@ -81,10 +80,6 @@ var configuration = new ProductionConfiguration {
 };
 
 builder.Services.AddSingleton(configuration);
-builder.Services.AddSingleton(new PostgresPersistenceOptions {
-    ConnectionString = configuration.DatabaseConnectionString,
-    RequireSsl = configuration.Environment == "Production"
-});
 
 var app = builder.Build();
 
@@ -106,9 +101,6 @@ app.MapProcurementEndpoints();
 app.MapProductionEndpoints();
 app.MapMenuEngineeringEndpoints();
 app.MapReportingEndpoints();
-
-if (app.Environment.IsDevelopment())
-    app.MapOpenApi();
 
 app.Run();
 

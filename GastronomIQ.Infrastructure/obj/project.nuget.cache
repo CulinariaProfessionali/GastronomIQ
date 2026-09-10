@@ -1,20 +1,22 @@
 {
   "version": 2,
-  "dgSpecHash": "OKcvzioZuTQ=",
+  "dgSpecHash": "wRrDemXyjL8=",
   "success": true,
   "projectFilePath": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Infrastructure/GastronomIQ.Infrastructure.csproj",
   "expectedPackageFiles": [
-    "/home/runner/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.extensions.configuration.binder/8.0.0/microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.identitymodel.abstractions/8.0.2/microsoft.identitymodel.abstractions.8.0.2.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.0.2/microsoft.identitymodel.jsonwebtokens.8.0.2.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.identitymodel.logging/8.0.2/microsoft.identitymodel.logging.8.0.2.nupkg.sha512",
-    "/home/runner/.nuget/packages/microsoft.identitymodel.tokens/8.0.2/microsoft.identitymodel.tokens.8.0.2.nupkg.sha512",
-    "/home/runner/.nuget/packages/npgsql/8.0.6/npgsql.8.0.6.nupkg.sha512",
-    "/home/runner/.nuget/packages/system.identitymodel.tokens.jwt/8.0.2/system.identitymodel.tokens.jwt.8.0.2.nupkg.sha512"
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.extensions.configuration.binder/8.0.0/microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.identitymodel.abstractions/8.0.2/microsoft.identitymodel.abstractions.8.0.2.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.identitymodel.jsonwebtokens/8.0.2/microsoft.identitymodel.jsonwebtokens.8.0.2.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.identitymodel.logging/8.0.2/microsoft.identitymodel.logging.8.0.2.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.identitymodel.tokens/8.0.2/microsoft.identitymodel.tokens.8.0.2.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/npgsql/8.0.6/npgsql.8.0.6.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/system.identitymodel.tokens.jwt/8.0.2/system.identitymodel.tokens.jwt.8.0.2.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.netcore.app.ref/8.0.30/microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
+    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.aspnetcore.app.ref/8.0.30/microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
   ],
   "logs": []
 }
