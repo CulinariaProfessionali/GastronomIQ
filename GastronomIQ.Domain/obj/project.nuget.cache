@@ -1,11 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TiaDOwOKYLk=",
+  "dgSpecHash": "2/rDEYgNMNs=",
   "success": true,
   "projectFilePath": "/home/runner/work/GastronomIQ/GastronomIQ/GastronomIQ.Domain/GastronomIQ.Domain.csproj",
-  "expectedPackageFiles": [
-    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.netcore.app.ref/8.0.30/microsoft.netcore.app.ref.8.0.30.nupkg.sha512",
-    "/tmp/codeql-scratch-9d63ab11bee016c6/dbs/csharp/working/packages/microsoft.aspnetcore.app.ref/8.0.30/microsoft.aspnetcore.app.ref.8.0.30.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }
