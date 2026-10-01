@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'copilot/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-migrate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: gastronomiq
+          POSTGRES_USER: gastronomiq
+          POSTGRES_PASSWORD: gastronomiq
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U gastronomiq -d gastronomiq"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGPASSWORD: gastronomiq
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore GastronomIQ.sln
+
+      - name: Build
+        run: dotnet build GastronomIQ.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test GastronomIQ.sln --configuration Release --no-build
+
+      - name: Migration smoke
+        run: |
+          psql -h localhost -U gastronomiq -d gastronomiq -v ON_ERROR_STOP=1 -f database/schema/001_initial_schema.sql
+          psql -h localhost -U gastronomiq -d gastronomiq -v ON_ERROR_STOP=1 -c "DO \$\$ BEGIN IF to_regclass('public.idempotency_records') IS NULL THEN RAISE EXCEPTION 'idempotency_records table is missing'; END IF; IF to_regclass('public.audit_events') IS NULL THEN RAISE EXCEPTION 'audit_events table is missing'; END IF; END \$\$;"
