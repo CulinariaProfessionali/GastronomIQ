@@ -1,0 +1,48 @@
+# .NET build artifacts
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code local settings
+.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test output
+TestResults/
+coverage/
+coverage.*
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local configuration containing secrets
+appsettings.Local.json
+appsettings.*.local.json
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Temporary files
+*.tmp
+*.temp
